@@ -49,9 +49,24 @@ function handlerClick(evt) {
 
   const galleryItem = galleryItems.find(({ original }) => original === source);
 
-  const instance = basicLightbox.create(`
-    <img src="${galleryItem.original}" >
-`);
-
+  const instance = basicLightbox.create(
+    `<img src="${galleryItem.original}" >`,
+    {
+      closable: false,
+      onShow: instance => {
+        document.addEventListener('keydown', handlerKeydown);
+      },
+      onClose: instance => {
+        document.removeEventListener('keydown', handlerKeydown);
+      },
+    }
+  );
   instance.show();
+
+  function handlerKeydown(evt) {
+    console.log(evt.code);
+    if (evt.code === 'Escape') {
+      instance.close();
+    }
+  }
 }
